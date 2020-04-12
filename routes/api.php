@@ -21,7 +21,7 @@ Route::post('/airlock/token', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
-        'device_name' => 'required'
+        'token_name' => 'required'
     ]);
 
     $user = User::where('email', $request->email)->first();
@@ -31,15 +31,15 @@ Route::post('/airlock/token', function (Request $request) {
             'email' => ['As credenciais informadas estão invalidas.'],
         ]);
     }
-
-    return $user->createToken($request->device_name)->plainTextToken;
+    $token = $user->createToken($request->token_name)->plainTextToken;
+    return response()->json(['token' => $token]);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:airlock')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::namespace('Admin')->group(function(){
             // Controllers Within The "App\Http\Controllers\Admin" Namespace
         Route::prefix('admin')->group(function (){
@@ -49,12 +49,12 @@ Route::middleware('auth:airlock')->group(function () {
         });
     });
 
-    Route::namespace('Admin')->group(function(){
+    Route::namespace('Api')->group(function(){
         // Controllers Within The "App\Http\Controllers\Admin" Namespace
-        Route::prefix('admin')->group(function (){
-            Route::get('users', function () {
-                // Matches The "/admin/users" URL
-            });
+        Route::prefix('user')->group(function (){
+            Route::get('show', 'UserController@index');
         });
     });
 });
+
+Route::post('user/store', 'Api\UserController@store')->name('user.store');

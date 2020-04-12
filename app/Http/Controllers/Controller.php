@@ -11,13 +11,4 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $presponse;
-
-    protected function prepare_response(string $message, array $dados, bool $erros){
-        $this->presponse = response()->json([
-            'message' => $message,
-            'errors' => $erros,
-            'data' => $dados
-        ]);
-    }
 }
