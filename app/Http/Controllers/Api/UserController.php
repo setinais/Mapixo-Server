@@ -75,9 +75,12 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(User $user, Request $request)
     {
-        //
+        return response()->json([
+            'message' => 'Consulta Ok',
+            'errors' => false,
+            'data' => User::find($request->user()['id'])], 201);
     }
 
     /**
@@ -87,9 +90,37 @@ class UserController extends Controller
      * @param  int  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $user)
+    public function update(Request $request)
     {
-        //
+        try{
+            $user = User::findOrFail($request->user()['id']);
+
+            if(isset($request['email']))
+                $user->email = $request['email'];
+            if(isset($request['password']))
+                $user->password = Hash::make($request['password']);
+            if(isset($request['nome']))
+                $user->name = $request['nome'];
+            if(isset($request['telefone']))
+                $user->telefone = $request['telefone'];
+            $user->save();
+
+            return response()->json(
+                [
+                    'message' => 'Ok!',
+                    'errors' => false,
+                    'data' => $user
+                ]
+            );
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'message' => 'Erro interno',
+                    'errors' => true,
+                    'data' => $user
+                ],500
+            );
+        }
     }
 
     /**
@@ -98,8 +129,21 @@ class UserController extends Controller
      * @param  int  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $user)
+    public function destroy(int $user, Request $request)
     {
-        //
+        try{
+            $user = User::find($request->user()['id']);
+            $user->delete();
+
+            return response()->json(['message'=> 'Desativado com sucesso', 'errors'=> false, 'data'=> $user],201);
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'message' => 'Erro interno',
+                    'errors' => true,
+                    'data' => $user
+                ], 500
+            );
+        }
     }
 }

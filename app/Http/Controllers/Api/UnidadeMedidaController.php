@@ -15,7 +15,15 @@ class UnidadeMedidaController extends Controller
      */
     public function index()
     {
-        //
+        $unidade = [];
+        foreach (UnidadeMedida::all() as $classi){
+            $unidade[] = $classi->nome;
+        }
+        return response()->json([
+            'message'=> 'Busca Concluida',
+            'errors'=> false,
+            'data'=> $unidade
+        ],201);
     }
 
     /**

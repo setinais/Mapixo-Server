@@ -52,8 +52,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::namespace('Api')->group(function(){
         // Controllers Within The "App\Http\Controllers\Admin" Namespace
         Route::prefix('user')->group(function (){
-            Route::get('show', 'UserController@index');
+            Route::get('show', 'UserController@show')->name('user.show');
+            Route::put('update', 'UserController@update')->name('user.update');
+            Route::delete('delete', 'UserController@delete')->name('user.delete');
         });
+
+        Route::apiResource('oferta', 'OfertaMaterialController');
+        Route::get('classificacao', 'ClassificacaoController@index');
+        Route::get('unidade_medida', 'UnidadeMedidaController@index');
+
+        Route::post('/oferta/uploadImage/{id}', 'OfertaMaterialController@uploadImage')->name('oferta.uploadImage');
+        Route::get('/getOfertasUser', 'OfertaMaterialController@getOfertasUser')->name('oferta.getOfertasUser');
     });
 });
 

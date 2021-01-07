@@ -15,7 +15,15 @@ class ClassificacaoController extends Controller
      */
     public function index()
     {
-        //
+        $classificaca = [];
+        foreach (Classificacao::all() as $classi){
+            $classificaca[] = $classi->nome;
+        }
+        return response()->json([
+                'message'=> 'Busca Concluida',
+                'errors'=> false,
+                'data'=> $classificaca
+            ],201);
     }
 
     /**
