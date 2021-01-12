@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="PostgreSQL - d21gj7v0l5ffhp@ec2-52-206-44-27.compute-1.amazonaws.com" uuid="028c09fc-35d7-4817-8f5b-53bed6d96f54">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-52-206-44-27.compute-1.amazonaws.com:5432/d21gj7v0l5ffhp</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="mapixo-db@192.168.10.10" uuid="780cc1ae-6715-48ea-a87b-713bdb14070e">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://192.168.10.10:3306/mapixo-db</jdbc-url>
+    </data-source>
+  </component>
+</project>

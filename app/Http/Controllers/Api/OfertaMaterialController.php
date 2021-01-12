@@ -147,9 +147,16 @@ class OfertaMaterialController extends Controller
      * @param  \App\OfertaMaterial  $ofertaMaterial
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OfertaMaterial $ofertaMaterial)
+    public function destroy($ofertaMaterial)
     {
-        //
+        $oferta = OfertaMaterial::find($ofertaMaterial);
+        $oferta->delete();
+        return response()->json([
+            'message'=> 'Busca Concluida',
+            'errors'=> false,
+            'data' => $oferta->deleted_at
+        ],201);
+
     }
     public function uploadImage($id, Request $request)
     {
@@ -200,7 +207,17 @@ class OfertaMaterialController extends Controller
                 $oa->user_id = User::find($oa->user_id);
 //                $oa->foto = Storage::url($oa->foto);
                 $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
-                $data[] = $oa;
+                $data['pendetes'][] = $oa;
+            }
+            $oferta_all = OfertaMaterial::where('status',1)->where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->get();
+            foreach ($oferta_all as $oa){
+                $oa->localizacao_id = Localizacao::find($oa->localizacao_id);
+                $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
+                $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
+                $oa->user_id = User::find($oa->user_id);
+//                $oa->foto = Storage::url($oa->foto);
+                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
+                $data['concluidas'][] = $oa;
             }
 
             return response()->json([
@@ -217,5 +234,17 @@ class OfertaMaterialController extends Controller
                 ], 500
             );
         }
+    }
+
+    public function sucessOferta($id){
+        $oferta = OfertaMaterial::find($id);
+        $oferta->status = true;
+        $oferta->save();
+
+        return response()->json([
+            'message'=> 'Oferta concluida com sucesso',
+            'errors'=> false,
+            'data' => []
+        ],201);
     }
 }

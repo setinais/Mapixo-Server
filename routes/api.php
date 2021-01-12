@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/oferta/uploadImage/{id}', 'OfertaMaterialController@uploadImage')->name('oferta.uploadImage');
         Route::get('/getOfertasUser', 'OfertaMaterialController@getOfertasUser')->name('oferta.getOfertasUser');
+        Route::get('/sucessOferta/{id}', 'OfertaMaterialController@sucessOferta')->name('oferta.sucessOferta');
     });
 });
 
