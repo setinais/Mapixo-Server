@@ -192,7 +192,7 @@ class OfertaMaterialController extends Controller
                 ]);
             if ($validator->fails()) {
                 $ofe = OfertaMaterial::find(2);
-                $ofe->foto = json_encode($validator->errors);
+                $ofe->foto = json_encode($validator->errors());
                 $ofe->save();
                 return response()->json($validator->errors(), 401);
             }
