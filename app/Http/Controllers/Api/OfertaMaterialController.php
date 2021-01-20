@@ -188,10 +188,10 @@ class OfertaMaterialController extends Controller
             $validator = Validator::make($request->all(),
                 [
                     'user_id' => '',
-                    'file' => 'required',
+                    'file' => 'required|mimes:doc,docx,pdf,txt,jpeg,png,jpg|max:8192',
                 ]);
             if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 401);
+                return response()->json($validator->errors(), 401);
             }
             if ($files = $request->file('file')) {
                 //store file into document folder
