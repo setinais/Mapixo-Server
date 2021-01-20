@@ -67,7 +67,7 @@
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
-                        <a href="{{ route('file') }}" download target="_blank">Download APP</a>
+                        <a href="https://maixo-server.herokuapp.com/file" download target="_blank">Download APP</a>
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
                     @else
