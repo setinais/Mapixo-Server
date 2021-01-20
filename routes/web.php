@@ -20,3 +20,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('file', function()
+{
+    $path = storage_path().'/'.'app'.'/public/app-release.apk';
+    if (file_exists($path)) {
+        return Response::download($path);
+    }
+})->name('file');
