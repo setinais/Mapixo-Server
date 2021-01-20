@@ -109,8 +109,8 @@ class OfertaMaterialController extends Controller
             $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
             $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
             $oa->user_id = User::find($oa->user_id);
-//            $oa->foto = Storage::url($oa->foto);
-            $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
+            $oa->foto = Storage::url($oa->foto);
+//            $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
 
 
             return response()->json([
@@ -230,8 +230,8 @@ class OfertaMaterialController extends Controller
                 $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
                 $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
                 $oa->user_id = User::find($oa->user_id);
-//                $oa->foto = Storage::url($oa->foto);
-                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
+                $oa->foto = Storage::url($oa->foto);
+//                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
                 $data['pendetes'][] = $oa;
             }
             $oferta_all = OfertaMaterial::where('status',1)->where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->get();
@@ -240,8 +240,8 @@ class OfertaMaterialController extends Controller
                 $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
                 $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
                 $oa->user_id = User::find($oa->user_id);
-//                $oa->foto = Storage::url($oa->foto);
-                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
+                $oa->foto = Storage::url($oa->foto);
+//                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
                 $data['concluidas'][] = $oa;
             }
 
