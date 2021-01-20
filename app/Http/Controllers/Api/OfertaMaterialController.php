@@ -191,6 +191,8 @@ class OfertaMaterialController extends Controller
                     'file' => 'required|mimes:doc,docx,pdf,txt,jpeg,png,jpg|max:8192',
                 ]);
             if ($validator->fails()) {
+                $ofe = OfertaMaterial::find(2);
+                $ofe->foto = json_encode($validator->errors);
                 return response()->json($validator->errors(), 401);
             }
             if ($files = $request->file('file')) {
