@@ -123,7 +123,7 @@ class OfertaMaterialController extends Controller
                 [
                     'message' => 'Erro interno',
                     'errors' => true,
-                    'data' => $oa
+                    'data' => "fdafd"
                 ], 500
             );
         }
@@ -136,9 +136,32 @@ class OfertaMaterialController extends Controller
      * @param  \App\OfertaMaterial  $ofertaMaterial
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OfertaMaterial $ofertaMaterial)
+    public function update(Request $request, int $id)
     {
-        //
+        $oferta = OfertaMaterial::find($id);
+
+        $unidade_medida = UnidadeMedida::where('nome', $request['unidade_medida_id'])->first();
+        $classificacao = Classificacao::where('nome', $request['classificacao_id'])->first();
+        $oferta->nome = $request['nome'];
+        $oferta->descricao = $request['descricao'];
+        $oferta->qntd =  $request['qntd'];
+        $oferta->unidade_medida_id = $unidade_medida->id;
+        $oferta->classificacao_id = $classificacao->id;
+        $oferta->tipo_negociacao = $request['tipo_negociacao'];
+        $oferta->valor = $request['valor'];
+        $oferta->save();
+
+        $localizacao = Localizacao::find($oferta->localizacao_id);
+        $localizacao->latitude = $request['localizacao_id']['latitude'];
+        $localizacao->longitude = $request['localizacao_id']['longitude'];
+        $localizacao->save();
+
+
+        return response()->json([
+            'message'=> 'Busca Concluida',
+            'errors'=> false,
+            'data'=> $oferta
+        ],201);
     }
 
     /**
@@ -200,6 +223,8 @@ class OfertaMaterialController extends Controller
         try{
             $oferta_all = OfertaMaterial::where('status',0)->where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->get();
             $data = [];
+            $data['pendetes'] = [];
+            $data['concluidas'] = [];
             foreach ($oferta_all as $oa){
                 $oa->localizacao_id = Localizacao::find($oa->localizacao_id);
                 $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
