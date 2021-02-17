@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Classificacao;
+use App\ColetaOferta;
 use App\Http\Controllers\Controller;
 use App\Localizacao;
 use App\OfertaMaterial;
@@ -101,32 +102,35 @@ class OfertaMaterialController extends Controller
      * @param  \App\OfertaMaterial  $ofertaMaterial
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(int $id, $request)
     {
-        try{
+//        try{
             $oa = OfertaMaterial::find($id);
             $oa->localizacao_id = Localizacao::find($oa->localizacao_id);
             $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
             $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
             $oa->user_id = User::find($oa->user_id);
             $oa->foto = Storage::url($oa->foto);
+            $coleta_oferta= ColetaOferta::where('oferta_material_id', $id)->where('user_id', $request->user()->id)->get();
+            if(count($coleta_oferta) >= 1)
+                $oa->oferta_material_id = $coleta_oferta;
 //            $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
 
 
             return response()->json([
                 'message'=> 'Busca Concluida',
                 'errors'=> false,
-                'data' => $oa
+                'data' => $coleta_oferta
             ],201);
-        }catch (\Exception $e){
-            return response()->json(
-                [
-                    'message' => 'Erro interno',
-                    'errors' => true,
-                    'data' => "fdafd"
-                ], 500
-            );
-        }
+//        }catch (\Exception $e){
+//            return response()->json(
+//                [
+//                    'message' => 'Erro interno',
+//                    'errors' => true,
+//                    'data' => "fdafd"
+//                ], 500
+//            );
+//        }
     }
 
     /**

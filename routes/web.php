@@ -27,3 +27,8 @@ Route::get('file', function()
         return Response::download($path);
     }
 })->name('file');
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
