@@ -101,36 +101,40 @@ class OfertaMaterialController extends Controller
      *
      * @param  \App\OfertaMaterial  $ofertaMaterial
      * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function show(int $id, $request)
+    public function show($id, Request $request)
     {
-//        try{
+        try{
             $oa = OfertaMaterial::find($id);
             $oa->localizacao_id = Localizacao::find($oa->localizacao_id);
             $oa->unidade_medida_id = UnidadeMedida::find($oa->unidade_medida_id)->nome;
             $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
             $oa->user_id = User::find($oa->user_id);
             $oa->foto = Storage::url($oa->foto);
-            $coleta_oferta= ColetaOferta::where('oferta_material_id', $id)->where('user_id', $request->user()->id)->get();
+            $coleta_oferta= ColetaOferta::where('oferta_material_id', $id)->get();
+            $oa->oferta_material_id = true;
             if(count($coleta_oferta) >= 1)
-                $oa->oferta_material_id = $coleta_oferta;
+                $oa->oferta_material_id = false;
+            if($request->user()->id == $oa->user_id->id)
+                $oa->oferta_material_id = false;
 //            $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
 
 
             return response()->json([
                 'message'=> 'Busca Concluida',
                 'errors'=> false,
-                'data' => $coleta_oferta
+                'data' => $oa
             ],201);
-//        }catch (\Exception $e){
-//            return response()->json(
-//                [
-//                    'message' => 'Erro interno',
-//                    'errors' => true,
-//                    'data' => "fdafd"
-//                ], 500
-//            );
-//        }
+        }catch (\Exception $e){
+            return response()->json(
+                [
+                    'message' => 'Erro interno',
+                    'errors' => true,
+                    'data' => "fdafd"
+                ], 500
+            );
+        }
     }
 
     /**
@@ -238,6 +242,11 @@ class OfertaMaterialController extends Controller
                 $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
                 $oa->user_id = User::find($oa->user_id);
                 $oa->foto = Storage::url($oa->foto);
+                $om = ColetaOferta::where('oferta_material_id', $oa->id)->get();
+                if(count($om) >= 1){
+                    $om[0]->user_id = User::find($om[0]->user_id);
+                    $oa->oferta_material = $om[0];
+                }
 //                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
                 $data['pendetes'][] = $oa;
             }
@@ -248,6 +257,11 @@ class OfertaMaterialController extends Controller
                 $oa->classificacao_id = Classificacao::find($oa->classificacao_id)->nome;
                 $oa->user_id = User::find($oa->user_id);
                 $oa->foto = Storage::url($oa->foto);
+                $om = ColetaOferta::where('oferta_material_id', $oa->id)->get();
+                if(count($om) >= 1){
+                    $om[0]->user_id = User::find($om[0]->user_id);
+                    $oa->oferta_material = $om[0];
+                }
 //                $oa->foto = "http://192.168.10.10/storage/".$oa->foto;
                 $data['concluidas'][] = $oa;
             }
@@ -273,8 +287,25 @@ class OfertaMaterialController extends Controller
         $oferta->status = true;
         $oferta->save();
 
+        $coleta = ColetaOferta::where('oferta_material_id', $id)->get();
+        $coleta[0]->status = 'Finalizado';
+        $coleta[0]->save();
+
         return response()->json([
             'message'=> 'Oferta concluida com sucesso',
+            'errors'=> false,
+            'data' => []
+        ],201);
+    }
+
+    public function negativeOferta($id){
+        $coleta = ColetaOferta::where('oferta_material_id', $id)->get();
+        $coleta[0]->status = 'Rejeitado';
+        $coleta[0]->save();
+        $coleta[0]->delete();
+
+        return response()->json([
+            'message'=> 'Oferta rejeitada com sucesso',
             'errors'=> false,
             'data' => []
         ],201);
