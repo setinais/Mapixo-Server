@@ -19,7 +19,7 @@
         "phpseclib/bcmath_compat": "^2.0.0",
         "phpseclib/phpseclib": "~3.0.5",
         "tcg/voyager": "^1.4",
-        "moontoast/math": "*"
+        "brick/math": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
